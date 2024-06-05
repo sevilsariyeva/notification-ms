@@ -37,10 +37,6 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request,HttpStatus.NOT_FOUND,ex.getMessage());
     }
 
-    private ResponseEntity<Map<String, Object>> ofType(WebRequest request, HttpStatus status, String message) {
-        return ofType(request,status,message, Collections.emptyList());
-    }
-
     private ResponseEntity<Map<String, Object>> ofType(WebRequest request, HttpStatus status, String message, List<?> validationErrors) {
         Map<String,Object> attributes=getErrorAttributes(request, ErrorAttributeOptions.defaults());
         attributes.put(HttpResponseConstants.STATUS,status.value());
@@ -56,5 +52,8 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
                                                                  WebRequest request){
         logger.error("NotFoundException: {}",ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+    private ResponseEntity<Map<String, Object>> ofType(WebRequest request, HttpStatus status, String message) {
+        return ofType(request,status,message, Collections.emptyList());
     }
 }
