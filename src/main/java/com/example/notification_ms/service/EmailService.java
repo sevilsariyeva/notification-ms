@@ -1,15 +1,13 @@
 package com.example.notification_ms.service;
 
-import com.example.notification_ms.entity.NotFoundException;
+import com.example.notification_ms.exception.EmailSendException;
+import com.example.notification_ms.exception.NotFoundException;
 import com.example.notification_ms.entity.Notification;
-import com.example.notification_ms.entity.dto.EmailRequestDTO;
 import com.example.notification_ms.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -49,7 +47,7 @@ public class EmailService {
             logger.info("Email sent to {}", toEmail);
         } catch (Exception e) {
             logger.error("Failed to send email to {}: {}", toEmail, e.getMessage());
-            throw new RuntimeException("Failed to send email", e);
+            throw new EmailSendException("Failed to send email to " + toEmail, e);
         }
     }
 
@@ -57,10 +55,6 @@ public class EmailService {
         return notificationRepository.findAll();
     }
     public List<Notification> getAllByMail(String email) {
-        List<Notification> notifications = notificationRepository.findByFromEmail(email);
-        if (notifications.isEmpty()) {
-            throw new NotFoundException("No notifications found for email: " + email);
-        }
-        return notifications;
+        return notificationRepository.findByFromEmail(email).orElseThrow(()-> new NotFoundException("No notifications found for email: " + email));
     }
 }
