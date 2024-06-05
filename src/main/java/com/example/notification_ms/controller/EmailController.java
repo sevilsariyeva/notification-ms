@@ -36,4 +36,9 @@ public class EmailController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<Notification>> searchNotifications(@RequestParam String message){
+        List<Notification> notifications = emailService.search(message);
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
 }

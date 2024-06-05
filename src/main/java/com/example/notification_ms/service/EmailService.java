@@ -57,4 +57,7 @@ public class EmailService {
     public List<Notification> getAllByMail(String email) {
         return notificationRepository.findByFromEmail(email).orElseThrow(()-> new NotFoundException("No notifications found for email: " + email));
     }
+    public List<Notification> search(String message){
+        return notificationRepository.findBySubjectContainingOrBodyContainingOrToEmailContaining(message,message,message);
+    }
 }
