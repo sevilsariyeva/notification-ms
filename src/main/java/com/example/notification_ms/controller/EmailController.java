@@ -29,12 +29,8 @@ public class EmailController {
 
     @GetMapping("/notificationsByEmail")
     public ResponseEntity<List<Notification>> getAllByEmail(@RequestParam String email) {
-        try {
-            List<Notification> notifications = emailService.getAllByMail(email);
-            return new ResponseEntity<>(notifications, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        List<Notification> notifications = emailService.getAllByMail(email);
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
     @GetMapping("/search")
     public ResponseEntity<List<Notification>> searchNotifications(@RequestParam String message){
